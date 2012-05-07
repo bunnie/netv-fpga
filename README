@@ -1,0 +1,7 @@
+Verilog code for the NeTV FPGA.
+
+Please pay attention to the version number embedded inside hdmi_overlay.v. This, along with the version notes, will inform you as to the latest status of the code.
+
+The code as checked-in is structured according to how the Xilinx ISE tools placed my code when using the PlanAhead flow. 
+
+This was most recently compiled using ISE Design Suite 13.3 (as of May 2012).
