@@ -1,7 +1,10 @@
-Verilog code for the NeTV FPGA.
+Verilog code for the NeTV FPGA. Andrew "bunnie" Huang.
 
 Please pay attention to the version number embedded inside hdmi_overlay.v. This, along with the version notes, will inform you as to the latest status of the code.
 
 The code as checked-in is structured according to how the Xilinx ISE tools placed my code when using the PlanAhead flow. 
 
 This was most recently compiled using ISE Design Suite 13.3 (as of May 2012).
+
+All of the code in here is licensed under a BSD license. Functional elements are licensed under an XL-1.0 license (patents awarded that use this code in any way are automatically irrevocably cross-licensed to me without limitation, and through that license I grant all parties that may use this code an automatic cross-license; likewise, any patents I may hold or be awarded on this code are automatically cross-licensed to you). Note there is no warranty for this code, express or implied. 
+

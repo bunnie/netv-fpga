@@ -1,0 +1,357 @@
+##############################################################################
+## Copyright (c) 2011, Andrew "bunnie" Huang
+## All rights reserved.
+##
+## Redistribution and use in source and binary forms, with or without modification, 
+## are permitted provided that the following conditions are met:
+##
+##  * Redistributions of source code must retain the above copyright notice, 
+##    this list of conditions and the following disclaimer.
+##  * Redistributions in binary form must reproduce the above copyright notice, 
+##    this list of conditions and the following disclaimer in the documentation and/or 
+##    other materials provided with the distribution.
+##
+##    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY 
+##    EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
+##    OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
+##    SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+##    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
+##    LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+##    PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+##    WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+##    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+##    POSSIBILITY OF SUCH DAMAGE.
+##
+##############################################################################
+
+###########################################
+# Setting VCCAUX for Spartan 6 TMDS
+###########################################
+CONFIG VCCAUX  = 3.3;
+
+#
+# Constraint for RX0
+#
+#NET "dvi_rx0/rxclk" TNM_NET = "DVI_CLOCK0";
+#TIMESPEC TS_DVI_CLOCK0 = PERIOD "DVI_CLOCK0" 155 MHz HIGH 50%;
+#
+# Multi-cycle paths for TX0
+#
+TIMEGRP bramgrp_0 =   RAMS("dvi_tx0/pixel2x/dataint[*]");
+TIMEGRP fddbgrp_0 =   FFS("dvi_tx0/pixel2x/db[*]");
+TIMEGRP bramra_0 =   FFS("dvi_tx0/pixel2x/ra[*]");
+
+TIMESPEC TS_ramdo_0 = FROM "bramgrp_0" TO "fddbgrp_0" TS_pixclocks ;
+TIMESPEC TS_ramra_0 = FROM "bramra_0" TO "fddbgrp_0" TS_pixclocks ;
+
+##############################################################################
+# SYSCLK Input
+##############################################################################
+NET "clk26" IOSTANDARD = LVCMOS33;
+NET "clk26" LOC = P21;
+#NET "clk26" TNM_NET = "clk26";
+#TIMESPEC TS_clk26_ = PERIOD "clk26" 26 MHz HIGH 50 % PRIORITY 255;
+
+############################################
+# TMDS pairs for output
+############################################
+# Clock	
+NET "TX0_TMDS[3]" IOSTANDARD = TMDS_33;
+NET "TX0_TMDSB[3]" IOSTANDARD = TMDS_33;
+#INST "dvi_tx0/clkout/oserdes_s" LOC = OLOGIC_X6Y0;
+INST "dvi_tx0/TMDS3" LOC = P51;
+#INST "dvi_tx0/clkout/oserdes_m" LOC = OLOGIC_X6Y1;
+NET "dvi_tx0/TMDS[3]" LOC = P51;
+NET "dvi_tx0/TMDSB[3]" LOC = P50;
+# Red 	
+NET "TX0_TMDS[2]" IOSTANDARD = TMDS_33;
+NET "TX0_TMDSB[2]" IOSTANDARD = TMDS_33;
+INST "dvi_tx0/TMDS2" LOC = P62;
+#INST "dvi_tx0/oserdes2/oserdes_s" LOC = OLOGIC_X10Y2;
+#INST "dvi_tx0/oserdes2/oserdes_m" LOC = OLOGIC_X10Y3;
+NET "dvi_tx0/TMDS[2]" LOC = P62;
+NET "dvi_tx0/TMDSB[2]" LOC = P61;
+# Green	
+NET "TX0_TMDS[1]" IOSTANDARD = TMDS_33;
+NET "TX0_TMDSB[1]" IOSTANDARD = TMDS_33;
+#INST "dvi_tx0/oserdes1/oserdes_s" LOC = OLOGIC_X9Y2;
+INST "dvi_tx0/TMDS1" LOC = P58;
+#INST "dvi_tx0/oserdes1/oserdes_m" LOC = OLOGIC_X9Y3;
+NET "dvi_tx0/TMDS[1]" LOC = P58;
+NET "dvi_tx0/TMDSB[1]" LOC = P57;
+# Blue
+NET "TX0_TMDS[0]" IOSTANDARD = TMDS_33;
+NET "TX0_TMDSB[0]" IOSTANDARD = TMDS_33;
+#INST "dvi_tx0/oserdes0/oserdes_s" LOC = OLOGIC_X7Y2;
+INST "dvi_tx0/TMDS0" LOC = P56;
+#INST "dvi_tx0/oserdes0/oserdes_m" LOC = OLOGIC_X7Y3;
+NET "dvi_tx0/TMDS[0]" LOC = P56;
+NET "dvi_tx0/TMDSB[0]" LOC = P55;
+
+##############################################
+# TMDS pairs for input
+##############################################
+# CLK
+NET "RX0_TMDS[3]" IOSTANDARD = TMDS_33;
+NET "dvi_rx0/tmdsclk_p" LOC = P124;
+NET "RX0_TMDSB[3]" IOSTANDARD = TMDS_33;
+NET "dvi_rx0/tmdsclk_n" LOC = P123;
+# Red
+NET "RX0_TMDS[2]" IOSTANDARD = TMDS_33;
+NET "dvi_rx0/dec_r/des_0/datain_p" LOC = P134;
+NET "RX0_TMDSB[2]" IOSTANDARD = TMDS_33;
+NET "dvi_rx0/dec_r/des_0/datain_n" LOC = P133;
+# Green	
+NET "RX0_TMDS[1]" IOSTANDARD = TMDS_33;
+NET "dvi_rx0/dec_g/des_0/datain_p" LOC = P132;
+NET "RX0_TMDSB[1]" IOSTANDARD = TMDS_33;
+NET "dvi_rx0/dec_g/des_0/datain_n" LOC = P131;
+# Blue	
+NET "RX0_TMDS[0]" IOSTANDARD = TMDS_33;
+NET "dvi_rx0/dec_b/des_0/datain_p" LOC = P127;
+NET "RX0_TMDSB[0]" IOSTANDARD = TMDS_33;
+NET "dvi_rx0/dec_b/des_0/datain_n" LOC = P126;
+
+########
+# video in 
+########
+#R0
+NET "LCD_R[2]" IOSTANDARD = LVCMOS33;
+NET "LCD_R[2]" LOC = P38;
+#R1
+NET "LCD_R[3]" IOSTANDARD = LVCMOS33;
+NET "LCD_R[3]" LOC = P27;
+#R2
+NET "LCD_R[4]" IOSTANDARD = LVCMOS33;
+NET "LCD_R[4]" LOC = P16;
+#R3
+NET "LCD_R[5]" IOSTANDARD = LVCMOS33;
+NET "LCD_R[5]" LOC = P23;
+#R4
+NET "LCD_R[6]" IOSTANDARD = LVCMOS33;
+NET "LCD_R[6]" LOC = P22;
+#R5
+NET "LCD_R[7]" IOSTANDARD = LVCMOS33;
+NET "LCD_R[7]" LOC = P15;
+#G0
+NET "LCD_G[2]" IOSTANDARD = LVCMOS33;
+NET "LCD_G[2]" LOC = P29;
+#G1
+NET "LCD_G[3]" IOSTANDARD = LVCMOS33;
+NET "LCD_G[3]" LOC = P34;
+#G2
+NET "LCD_G[4]" IOSTANDARD = LVCMOS33;
+NET "LCD_G[4]" LOC = P14;
+#G3
+NET "LCD_G[5]" IOSTANDARD = LVCMOS33;
+NET "LCD_G[5]" LOC = P12;
+#G4
+NET "LCD_G[6]" IOSTANDARD = LVCMOS33;
+NET "LCD_G[6]" LOC = P26;
+#G5
+NET "LCD_G[7]" IOSTANDARD = LVCMOS33;
+NET "LCD_G[7]" LOC = P30;
+NET "LCDO_DCLK" IOSTANDARD = LVCMOS33;
+NET "LCDO_DCLK" SLEW = SLOW;
+NET "LCDO_DCLK" LOC = P17;
+NET "LCDO_DCLK" DRIVE = 4;
+NET "LCD_DE" IOSTANDARD = LVCMOS33;
+NET "LCD_DE" LOC = P24;
+NET "LCD_HSYNC" IOSTANDARD = LVCMOS33;
+NET "LCD_HSYNC" LOC = P33;
+NET "LCD_VSYNC" IOSTANDARD = LVCMOS33;
+NET "LCD_VSYNC" LOC = P35;
+#B0
+NET "LCD_B[2]" IOSTANDARD = LVCMOS33;
+NET "LCD_B[2]" LOC = P11;
+#B1
+NET "LCD_B[3]" IOSTANDARD = LVCMOS33;
+NET "LCD_B[3]" LOC = P10;
+#B2
+NET "LCD_B[4]" IOSTANDARD = LVCMOS33;
+NET "LCD_B[4]" LOC = P32;
+#B3
+NET "LCD_B[5]" IOSTANDARD = LVCMOS33;
+NET "LCD_B[5]" LOC = P40;
+#B4
+NET "LCD_B[6]" IOSTANDARD = LVCMOS33;
+NET "LCD_B[6]" LOC = P9;
+#B5
+NET "LCD_B[7]" IOSTANDARD = LVCMOS33;
+NET "LCD_B[7]" LOC = P8;
+
+NET "VSYNC_STB" IOSTANDARD = LVCMOS33;
+NET "VSYNC_STB" LOC = P41;
+NET "HPD_NOTIFY" IOSTANDARD = LVCMOS33;
+NET "HPD_NOTIFY" LOC = P7;
+NET "HDCP_AKSV" IOSTANDARD = LVCMOS33;
+NET "HDCP_AKSV" LOC = P5;
+NET "LOWVOLT_NOTIFY" IOSTANDARD = LVCMOS33;
+NET "LOWVOLT_NOTIFY" LOC = P1;
+NET "SOURCE_NOTIFY" IOSTANDARD = LVCMOS33;
+NET "SOURCE_NOTIFY" LOC = P140;
+
+NET "SDA" LOC = P105;
+NET "SDA" IOSTANDARD = LVCMOS33;
+NET "SCL" IOSTANDARD = LVCMOS33;
+NET "SCL" LOC = P104;
+
+NET "DDC_SCL" IOSTANDARD = LVCMOS33;
+NET "DDC_SCL" LOC = P99;
+NET "DDC_SDA" IOSTANDARD = LVCMOS33;
+NET "DDC_SDA" LOC = P100;
+NET "HPD_N" IOSTANDARD = LVCMOS33;
+NET "HPD_N" LOC = P98;
+NET "HPD_OVERRIDE" IOSTANDARD = LVCMOS33;
+NET "HPD_OVERRIDE" LOC = P111;
+
+NET "DDC_SDA_PU" IOSTANDARD = LVCMOS33;
+NET "DDC_SDA_PU" LOC = P66;
+NET "DDC_SDA_PD" IOSTANDARD = LVCMOS33;
+NET "DDC_SDA_PD" LOC = P67;
+
+########################################
+# Reset button and LEDs and Mechanical Switches (SW)
+########################################
+
+# nonsense pin for now
+# add a pull-up, and check it happens in synthesis
+NET "rstbtn_n" IOSTANDARD = LVCMOS33;
+NET "rstbtn_n" PULLUP;
+NET "rstbtn_n" LOC = P115;
+NET "LED0" IOSTANDARD = LVCMOS33;
+NET "LED0" LOC = P138;
+NET "LED1" IOSTANDARD = LVCMOS33;
+NET "LED1" LOC = P137;
+
+NET "CEC" LOC = P47;
+NET "CEC" IOSTANDARD = LVCMOS33;
+
+NET "CHUMBY_BEND" LOC = P2;
+NET "CHUMBY_BEND" IOSTANDARD = LVCMOS33;
+
+NET "LOWVOLT_N" IOSTANDARD = LVCMOS33;
+NET "LOWVOLT_N" LOC = P44;
+NET "LOWVOLT_N" PULLUP;
+
+##################################
+## timing constraints
+##################################
+
+###### 26 mhz clock period constraint
+NET "clk26" TNM_NET = "clk26_pin";
+TIMESPEC TS_26mpin = PERIOD "clk26_pin" 26 MHz HIGH 50%;
+NET "clk26buf" TNM_NET = "clk26_tnm";
+TIMESPEC TS_26m = PERIOD "clk26_tnm" 26 MHz HIGH 50%;
+
+###### clock period spec
+NET "RX0_TMDS[3]" TNM_NET = "RXCLK_PIN";
+TIMESPEC TS_RXCLK_PIN = PERIOD "RXCLK_PIN" 74.25 MHz HIGH 50% PRIORITY -1;
+
+NET "RX0_TMDSB[3]" TNM_NET = "RXCLKB_PIN";
+TIMESPEC TS_RXCLKB_PIN = PERIOD "RXCLKB_PIN" 74.25 MHz HIGH 50% PRIORITY -1;
+
+# manually propagated constraint
+NET "dvi_rx0/pclk" TNM = "pixclocks";
+TIMESPEC TS_pixclocks = PERIOD "pixclocks" 74.25 MHz;
+
+NET "dvi_rx0/pclkx2" TNM_NET = "pclkx2";
+TIMESPEC TS_pclkx2 = PERIOD "pclkx2" 148.5 MHz;
+
+NET "dvi_rx0/pclkx10" TNM_NET = "pclkx10";
+TIMESPEC TS_pclkx10 = PERIOD "pclkx10" 742.5 MHz;
+
+NET "dvi_rx0/rxclk" TNM_NET = "rxclk_to_dcm";
+TIMESPEC TS_rxclk_to_dcm = PERIOD "rxclk_to_dcm" 74.25 MHz;
+
+NET "tx0_pclk" TNM_NET = "tx0_pclk_net";
+TIMESPEC TS_tx0_pclk = PERIOD "tx0_pclk_net" 74.25 MHz;
+
+NET "selfclockgen/clkfx" TNM_NET = "self_clk";
+TIMESPEC TS_selfclk = PERIOD "self_clk" 74.285 MHz;
+
+NET "clk2M" TNM_NET = "clk2M_net";
+TIMESPEC TS_clk2M = PERIOD "clk2M_net" 815 kHz;
+
+######## input pad timing constraints
+NET "LCD_*" TNM = PADS(LCD_*) "lcd_pads";
+OFFSET = IN 5 ns BEFORE "tx0_pclk" TIMEGRP "lcd_pads";
+
+######## TIG constraints
+NET "clk26buf" TNM_NET =  FFS "I2C_REGS";
+NET "dvi_rx0/pclk" TNM_NET =  FFS "rx_REGS";
+NET "tx0_pclk" TNM_NET =  FFS "tx_REGS";
+NET "rx0_pllclk1" TNM_NET = FFS "td_REGS"; # used by timing detector in some versions
+NET "tx0_pclk" TNM_NET =  RAMS "tx_RAMS";
+NET "tx0_pclk" TNM_NET =  BRAMS_PORTA "tx_RAMSA";
+NET "tx0_pclk" TNM_NET =  BRAMS_PORTB "tx_RAMSB";
+NET "selfclockgen/clkfx" TNM_NET = FFS "self_REGS";
+TIMEGRP "tx0_syncgrp" = "tx_REGS" "tx_RAMS" "tx_RAMSA" "tx_RAMSB";
+
+# I2C programming TIGs
+NET "host_i2c/I2C_reg_update" TNM = I2C_reg_exception;
+NET "ddc_hdcp_snoop/I2C_reg_update" TNM = I2C_reg_exception;
+NET "ddc_hdcp_snoop/Aksv14_write_rstpot" TNM = I2C_REG_exception;
+TIMESPEC TS_false_txw = FROM "I2C_reg_exception" TO "tx_REGS" TIG ;
+TIMESPEC TS_false_txr = FROM "tx_REGS" TO "I2C_reg_exception" TIG ;
+TIMESPEC TS_false_txd = FROM "td_REGS" TO "I2C_REGS" TIG ;
+
+TIMESPEC TS_false_rxw = FROM "I2C_reg_exception" TO "rx_REGS" TIG ; # there are none of these btw
+TIMESPEC TS_false_rxr = FROM "rx_REGS" TO "I2C_reg_exception" TIG ;
+
+TIMESPEC TS_false_self = FROM "I2C_reg_exception" TO "self_REGS" TIG ;
+
+# reset TIGs
+NET "tx0_reset" TIG;
+
+# self-clock TIGs
+NET "selfclockgen/clkfx" TNM_NET = "self_REGS";
+TIMESPEC TS_false_self_tx = FROM "self_REGS" TO "tx_REGS" TIG ;
+TIMESPEC TS_false_self_i2c = FROM "self_REGS" TO "I2C_REGS" TIG ;
+
+######## fix-up constraints
+TIMESPEC TS_TX_SYNC = FROM "tx0_syncgrp" TO "tx0_syncgrp" 74.25MHz;
+#TIMESPEC TS_DP_FFS = FROM "tx_REGS" TO "tx_REGS" 74.25MHz;
+#TIMESPEC TS_RAMS_FFS = FROM "tx_RAMS" TO "tx_REGS" 74.25MHz;
+#TIMESPEC TS_FFS_RAMS = FROM "tx_REGS" TO "tx_RAMS" 74.25MHz;
+
+TIMESPEC TS_RX0_FFS = FROM "rx_REGS" TO "rx_REGS" 74.25MHz;
+TIMESPEC TS_RXTX_FFS = FROM "rx_REGS" TO "tx_REGS" 74.25MHz;
+
+
+### comment out during self-timed mode
+NET "dvi_rx0/bufpll_lock" TIG;
+
+### remove comment during self-timed mode
+#NET "clk26" CLOCK_DEDICATED_ROUTE = FALSE;
+#NET "comp_ctl[6]" TIG;
+
+
+#################### LEGACY #####################
+
+#Created by Constraints Editor (xc6slx9-tqg144-2) - 2011/03/16
+#NET "RX0_TMDS[3]" TNM_NET = "RX0_TMDS<3>";
+# limited by ADVPLL spec
+#TIMESPEC TS_RX0_TMDS_3_ = PERIOD "RX0_TMDS<3>" 95 MHz HIGH 50 % PRIORITY 1;
+#TIMESPEC TS_RX0_TMDS_3_ = PERIOD "RX0_TMDS<3>" 35.34 ns HIGH 50%; # 480p/60
+#TIMESPEC TS_RX0_TMDS_3_ = PERIOD "RX0_TMDS<3>" 13.48 ns HIGH 50%; # 720p/60
+
+#NET "RX0_TMDSB[3]" TNM_NET = "RX0_TMDSB<3>";
+#TIMESPEC TS_RX0_TMDSB_3_ = PERIOD "RX0_TMDSB<3>" 95 MHz HIGH 50 % PRIORITY 1;
+#TIMESPEC TS_RX0_TMDS_3_ = PERIOD "RX0_TMDSB<3>" 35.34 ns HIGH 50%; # 480p/60
+#TIMESPEC TS_RX0_TMDS_3_ = PERIOD "RX0_TMDSB<3>" 13.48 ns HIGH 50%; # 720p/60
+
+#NET "tx0_pclk" TNM_NET = "tx0_pclk";
+#TIMESPEC TS_tx0_pclk = PERIOD "tx0_pclk" 74.25 MHz HIGH 50 % PRIORITY 2;
+
+#TIMESPEC TS_LCD_DCLK = PERIOD "LCD_DCLK" 74.25 MHz PRIORITY 200;
+#TIMESPEC TS_rx_clk = PERIOD "rx_clk" 74.25 MHz PRIORITY 1;
+#NET "LCD_DCLK" TNM_NET = "LCD_DCLK";
+#NET "dvi_rx0/rxclk" TNM_NET = "rx_clk";
+
+#TIMESPEC TS_rxclk_main = PERIOD "rxclk_main" 74.25 MHz PRIORITY 1;
+
+#NET "RX0_TMDS[3]" TNM_NET = "rxclk_main";
+#TIMESPEC TS_rxclk_main_b = PERIOD "rxclk_main_b" 74.25 MHz PRIORITY 1;
+#NET "RX0_TMDSB[3]" TNM_NET = "rxclk_main_b";
+#NET "clk26buf_BUFG" TNM = "clk26_tnm";
